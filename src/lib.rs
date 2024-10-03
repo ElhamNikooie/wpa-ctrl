@@ -73,6 +73,7 @@ use std::{fs, io, path, net};
 use core::{str, time};
 use core::sync::atomic::{AtomicU32, Ordering};
 use core::fmt::{self, Write};
+use std::os::fd::AsRawFd;
 
 ///Surrounds value with quotes, useful when setting `ssid` or `psk`
 pub struct QuotedValue<T: fmt::Display>(pub T);
@@ -622,6 +623,10 @@ impl WpaController {
         };
         this.socket.connect(path)?;
         Ok(this)
+    }
+    ///Return a file descriptor over WpaController
+    pub fn as_raw_fd(&self) -> std::os::unix::io::RawFd {
+        self.socket.as_raw_fd()
     }
 
     #[inline]
